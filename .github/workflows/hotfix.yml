@@ -19,7 +19,6 @@ jobs:
       - name: Set variables
         id: vars
         run: |
-          git fetch --prune --unshallow --tags
           NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
       - name: Create release branch
