@@ -30,7 +30,6 @@ jobs:
           echo "::set-output name=next_tag::${NEXT_TAG}"
           echo "::set-output name=latest_tag::${LATEST_TAG}"
       - name: Create release branch
-        id: create-release-branch
         uses: actions/github-script@v5
         env:
           NEXT_TAG: ${{steps.vars.outputs.next_tag}}

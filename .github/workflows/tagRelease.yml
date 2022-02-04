@@ -11,7 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
+        id: vars
         run: |
           TAG_HEADER="### Release tag: "
           TAG=`echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//"`
-          echo $TAG
+          echo "::set-output name=tag::${TAG}"
+      - name:
+        uses: actions/github-script@v5
+        env:
+          TAG: ${{steps.vars.outputs.tag}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const {TAG} = process.env
+            const branch = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: `release/${TAG}`
+            })
+            console.log(JSON.stringify(branch))
