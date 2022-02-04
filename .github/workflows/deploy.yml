@@ -9,12 +9,13 @@ on:
         type: string
 
 jobs:
+  prep:
+    uses: ./.github/workflows/zeffoEnv.yml
+
   test:
     runs-on: ubuntu-18.04
     steps:
-      - id: vars
-        uses: ./.github/actions/zeffoEnv
       - run: |
-          echo ${{ steps.vars.outputs.ref }}
-          echo ${{ steps.vars.outputs.environment }}
-          echo ${{ steps.vars.outputs.release_version }}
+          echo ${{ needs.prep.outputs.ref }}
+          echo ${{ needs.prep.outputs.environment }}
+          echo ${{ needs.prep.outputs.release_version }}
