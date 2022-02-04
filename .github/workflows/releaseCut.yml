@@ -57,7 +57,15 @@ jobs:
               labels: ['RC'],
               body: `
             ### Release tag: ${process.env.NEXT_TAG}
-            ### Included commits:
+
+            - To add release fixes:
+              1. \`git checkout release/${process.env.NEXT_TAG}\`
+              2. Check in fixes to the release branch.
+              3. (If applied) Cherry-pick the fix to \`master\`.
+            - To approve the push: Add \`golden\` label and close the issue.
+            - To cancel the push: Close the issue directly.
+
+            ### Included commits
 
             ${process.env.DIFF_COMMITS}
             `,

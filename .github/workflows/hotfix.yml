@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  deploy:
+  creation:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -50,6 +50,15 @@ jobs:
               body: `
             ### Release tag: ${process.env.NEXT_TAG}
 
-            Hotfix for ${process.env.CURRENT_TAG}
+            - To add fixes:
+              1. \`git checkout hotfix/${process.env.CURRENT_TAG}\`
+              2. Check in fixes to the release branch.
+              3. (If applied) Cherry-pick the fix to \`master\`.
+            - To approve the push: Add \`golden\` label and close the issue.
+            - To cancel the push: Close the issue directly.
             `,
             })
+      - name: Deploy to staging
+        run: echo "Deploy to staging"
+      - name: Notify slack channel
+        run: echo "Notify slack channel"
