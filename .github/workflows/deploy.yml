@@ -23,10 +23,10 @@ jobs:
           TAG=${{ github.event.inputs.tag }}
           if test $TAG; then REF="refs/tags/$TAG"; fi
           ENVIRONMENT="develop"
-          [[ $REF = refs/heads/release/* ]] && ENVIRONMENT="staging"
-          [[ $REF = refs/tags/* ]] && ENVIRONMENT="production"
+          [[ $REF == refs/heads/release/* ]] && ENVIRONMENT="staging"
+          [[ $REF == refs/tags/* ]] && ENVIRONMENT="production"
           RELEASE_VERSION=${{ github.sha }}
-          if [[ $REF = refs/tags/* ]]
+          if [[ $REF == refs/tags/* ]]
           then
             REG='refs/tags/(.*)'
             [[ $REF =~ $REG ]]
