@@ -62,13 +62,6 @@ jobs:
             ### Release tag: ${NEXT_TAG}
             ### Branch: hotfix/${CURRENT_TAG}
 
-            ATTENTION: You need to manually create the hotfix branch due to a
-            GitHub workflow issue.
-
-            \`\`\`
-            git checkout ${CURRENT_TAG} && git switch -c hotfix/${CURRENT_TAG} && git push --set-upstream origin hotfix/${CURRENT_TAG}
-            \`\`\`
-
             - To add fixes:
               1. \`git checkout hotfix/${CURRENT_TAG}\`
               2. Check in fixes to the release branch.
