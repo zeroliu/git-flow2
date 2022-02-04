@@ -12,5 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set variables
         run: |
-          TAG=`echo "${{ github.event.issue.body }}" | grep -m 1 "### Release tag" | sed "s/### Release tag //"`
+          TAG_HEADER="### Release tag: "
+          TAG=`echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}/"`
           echo $TAG
