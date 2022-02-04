@@ -13,8 +13,6 @@ jobs:
     steps:
       - run: echo "Creating hotfix for ${{ github.event.inputs.tag }}"
       - uses: actions/checkout@v2
-        with:
-          ref: refs/tags/${{ github.event.inputs.tag }}
       - name: Set variables
         id: vars
         run: |
