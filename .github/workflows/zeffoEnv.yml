@@ -6,9 +6,12 @@ on:
       tag:
         type: string
     outputs:
-      ref: ${{ jobs.vars.outputs.ref }}
-      environment: ${{ jobs.vars.outputs.environment }}
-      release_version: ${{ jobs.vars.outputs.release_version }}
+      ref:
+        value: ${{ jobs.vars.outputs.ref }}
+      environment:
+        value: ${{ jobs.vars.outputs.environment }}
+      release_version:
+        value: ${{ jobs.vars.outputs.release_version }}
 
 jobs:
   vars:
