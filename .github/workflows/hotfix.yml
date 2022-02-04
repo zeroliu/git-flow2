@@ -1,0 +1,40 @@
+name: Hotfix
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
+      - name: Set variables
+        id: vars
+        run: |
+          REG="v([0-9]+)-([0-9]+)"
+          [[ ${{ github.event.inputs.tag }} =~ $REG ]]
+          RELEASE_CUT_DATE=${BASH_REMATCH[0]}
+          PREV_VERSION=${BASH_REMATCH[1]}
+          NEXT_VERSION=$((${PREV_VERSION:-0}+1))
+          NEXT_TAG=v"$RELEASE_CUT_DATE"-"$NEXT_VERSION"
+          echo "::set-output name=next_tag::${NEXT_TAG}"
+      - name: Create release branch
+        uses: actions/github-script@v5
+        env:
+          NEXT_TAG: ${{steps.vars.outputs.next_tag}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log(context.sha)
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/heads/hotfix/${process.env.NEXT_TAG}`,
+              sha: context.sha
+            })
