@@ -22,6 +22,8 @@ jobs:
           NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
       - name: Create release branch (git command)
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           git config user.name github-actions
           git config user.name github-actions@github.com
