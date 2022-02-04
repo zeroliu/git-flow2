@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
-        run: echo "${{ toJSON(github.event.issue) }}"
+        run: echo "${{ github.event.issue.body }}"
