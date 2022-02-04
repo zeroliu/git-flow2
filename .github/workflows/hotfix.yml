@@ -25,10 +25,9 @@ jobs:
       - name: Create release branch
         uses: actions/github-script@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
           CURRENT_TAG: ${{ github.event.inputs.tag }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
           script: |
             const {CURRENT_TAG} = process.env
             const ref = await github.rest.git.getRef({
