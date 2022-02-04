@@ -25,7 +25,7 @@ jobs:
           TAG: ${{steps.vars.outputs.tag}}
           BRANCH: ${{steps.vars.outputs.branch}}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.WORKFLOW_TOKEN}}
           script: |
             const {TAG, BRANCH} = process.env
             const branch = await github.rest.repos.getBranch({
