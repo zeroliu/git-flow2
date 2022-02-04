@@ -7,7 +7,7 @@ on:
 jobs:
   tag_commit:
     runs-on: ubuntu-18.04
-    if: ${{ contains(github.event.issue.labels.*.name, 'golden'}}
+    if: ${{ contains(github.event.issue.labels.*.name, 'golden') }}
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
