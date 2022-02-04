@@ -37,7 +37,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: `refs/heads/hotfix/${CURRENT_TAG}`,
-              sha: context.sha
+              sha
             })
       - name: Create release issue
         if: ${{ success() }}
