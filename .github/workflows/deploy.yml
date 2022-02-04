@@ -2,6 +2,10 @@ name: Deploy a build
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
   workflow_call:
     inputs:
       tag:
@@ -17,3 +21,6 @@ jobs:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
           echo $EVENT_CONTEXT
+      - uses: actions/checkout@v2
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
