@@ -29,4 +29,10 @@ jobs:
               repo: context.repo.repo,
               branch: `release/${TAG}`
             })
-            console.log(JSON.stringify(branch))
+            const {sha} = branch.data.commit
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${TAG}`,
+              sha,
+            })
