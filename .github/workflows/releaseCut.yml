@@ -1,4 +1,5 @@
-name: Create a release candidate
+# This workflow creates a release branch and an issue to track the release.
+name: Create RC
 
 on: workflow_dispatch
 
@@ -15,12 +16,14 @@ jobs:
           # Need to fetch tags to get the latest tag.
           git fetch --prune --unshallow --tags
 
+          # Create a new tag based on the latest tag.
           RELEASE_CUT_DATE=`TZ=America/Los_Angeles date +'%Y%m%d'`
           PREV_VERSION=`git tag | grep v${RELEASE_CUT_DATE}- | sort -r | head -n 1 | sed s/v${RELEASE_CUT_DATE}-//`
           LATEST_TAG=`git tag | sort -r | head -n 1`
           NEXT_VERSION=$((${PREV_VERSION:-0}+1))
           NEXT_TAG=v"$RELEASE_CUT_DATE"-"$NEXT_VERSION"
 
+          # Extract the commits since the last release (the last tag).
           COMMON_ANCESTOR=`git merge-base ${GITHUB_SHA} ${LATEST_TAG}`
           DIFF_COMMITS=`git rev-list --abbrev-commit --format=oneline ${COMMON_ANCESTOR}..${GITHUB_SHA}`
 

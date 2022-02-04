@@ -1,4 +1,5 @@
-name: Hotfix
+# This workflow creates an issue to start the hotfix.
+name: Creat Hotfix
 
 on:
   workflow_dispatch:
@@ -21,27 +22,27 @@ jobs:
           git fetch --prune --unshallow --tags
           NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
-      # - name: Create release branch
-      #   uses: actions/github-script@v5
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-      #     CURRENT_TAG: ${{ github.event.inputs.tag }}
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const {CURRENT_TAG} = process.env
-      #       const ref = await github.rest.git.getRef({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         ref: `tags/${CURRENT_TAG}`
-      #       })
-      #       const {sha} = ref.data.object
-      #       await github.rest.git.createRef({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         ref: `refs/heads/hotfix/${CURRENT_TAG}`,
-      #         sha
-      #       })
+      - name: Create release branch
+        uses: actions/github-script@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          CURRENT_TAG: ${{ github.event.inputs.tag }}
+        with:
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          script: |
+            const {CURRENT_TAG} = process.env
+            const ref = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `tags/${CURRENT_TAG}`
+            })
+            const {sha} = ref.data.object
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/heads/hotfix/${CURRENT_TAG}`,
+              sha
+            })
       - name: Create release issue
         if: ${{ success() }}
         uses: actions/github-script@v5
