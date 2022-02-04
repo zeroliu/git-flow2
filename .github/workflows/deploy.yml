@@ -12,11 +12,8 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04
     steps:
-      - env:
+      - name: show event
+        env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
           echo $EVENT_CONTEXT
-      # - run: echo ${{ github.sha }}
-      # - uses: actions/checkout@v2
-      #   with:
-      #     ref: refs/tags/${{ inputs.tag }}
