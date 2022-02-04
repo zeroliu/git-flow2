@@ -14,6 +14,7 @@ jobs:
     outputs:
       ref: ${{ steps.vars.outputs.ref }}
       environment: ${{ steps.vars.outputs.environment }}
+      release_version: ${{ steps.vars.outputs.release_version }}
     steps:
       - name: Set variables
         id: vars
@@ -21,10 +22,19 @@ jobs:
           REF=${{ github.ref }}
           TAG=${{ github.event.inputs.tag }}
           if test $TAG; then REF="refs/tags/$TAG"; fi
-          ENVIRONMENT="staging"
+          ENVIRONMENT="develop"
+          [[ $REF = refs/heads/release/* ]] && ENVIRONMENT="staging"
           [[ $REF = refs/tags/* ]] && ENVIRONMENT="production"
+          RELEASE_VERSION=${{ github.sha }}
+          if [[ $REF = refs/tags/* ]]
+          then
+            REG='refs/tags/(.*)'
+            [[ $REF =~ $REG ]]
+            RELEASE_VERSION=${BASH_REMATCH[1]}
+          fi
           echo "::set-output name=ref::${REF}"
           echo "::set-output name=environment::${ENVIRONMENT}"
+          echo "::set-output name=release_version::${RELEASE_VERSION}"
   test:
     runs-on: ubuntu-18.04
     needs: prep
@@ -32,3 +42,4 @@ jobs:
       - run: |
           echo ${{ needs.prep.outputs.ref }}
           echo ${{ needs.prep.outputs.environment }}
+          echo ${{ needs.prep.outputs.release_version }}
