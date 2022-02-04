@@ -13,32 +13,40 @@ jobs:
     steps:
       - run: echo "Creating hotfix for ${{ github.event.inputs.tag }}"
       - uses: actions/checkout@v2
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
       - name: Set variables
         id: vars
         run: |
           git fetch --prune --unshallow --tags
           NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
-      - name: Create release branch
-        uses: actions/github-script@v5
-        env:
-          CURRENT_TAG: ${{ github.event.inputs.tag }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const {CURRENT_TAG} = process.env
-            const ref = await github.rest.git.getRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `tags/${CURRENT_TAG}`
-            })
-            const {sha} = ref.data.object
-            await github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/heads/hotfix/${CURRENT_TAG}`,
-              sha
-            })
+      - name: Create release branch (git command)
+        run: |
+          git config user.name github-actions
+          git config user.name github-actions@github.com
+          git switch -c hotfix/${{ github.event.inputs.tag }}
+          git push --set-upstream origin hotfix/${{ github.event.inputs.tag }}
+      # - name: Create release branch
+      #   uses: actions/github-script@v5
+      #   env:
+      #     CURRENT_TAG: ${{ github.event.inputs.tag }}
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       const {CURRENT_TAG} = process.env
+      #       const ref = await github.rest.git.getRef({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         ref: `tags/${CURRENT_TAG}`
+      #       })
+      #       const {sha} = ref.data.object
+      #       await github.rest.git.createRef({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         ref: `refs/heads/hotfix/${CURRENT_TAG}`,
+      #         sha
+      #       })
       - name: Create release issue
         if: ${{ success() }}
         uses: actions/github-script@v5
