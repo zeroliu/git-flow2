@@ -17,24 +17,39 @@ jobs:
       - name: Set variables
         id: vars
         run: |
-          REG="v([0-9]+)-([0-9]+)"
-          [[ ${{ github.event.inputs.tag }} =~ $REG ]]
-          RELEASE_CUT_DATE=${BASH_REMATCH[0]}
-          PREV_VERSION=${BASH_REMATCH[1]}
-          NEXT_VERSION=$((${PREV_VERSION:-0}+1))
-          NEXT_TAG=v"$RELEASE_CUT_DATE"-"$NEXT_VERSION"
+          NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
       - name: Create release branch
         uses: actions/github-script@v5
         env:
-          NEXT_TAG: ${{steps.vars.outputs.next_tag}}
+          CURRENT_TAG: ${{ github.event.inputs.tag }}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             console.log(context.sha)
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `refs/heads/hotfix/${process.env.NEXT_TAG}`,
+              ref: `refs/heads/hotfix/${process.env.CURRENT_TAG}`,
               sha: context.sha
+            })
+      - name: Create release issue
+        if: ${{ success() }}
+        uses: actions/github-script@v5
+        env:
+          NEXT_TAG: ${{ steps.vars.outputs.next_tag }}
+          CURRENT_TAG: ${{ github.event.inputs.tag }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Release candidate ${process.env.NEXT_TAG}`,
+              labels: ['RC'],
+              body: `
+            ### Release tag: ${process.env.NEXT_TAG}
+
+            Hotfix for ${process.env.CURRENT_TAG}
+            `,
             })
