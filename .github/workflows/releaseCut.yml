@@ -12,20 +12,23 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         id: vars
         run: |
+          # Need to fetch tags to get the latest tag.
           git fetch --prune --unshallow --tags
+
           RELEASE_CUT_DATE=`TZ=America/Los_Angeles date +'%Y%m%d'`
           PREV_VERSION=`git tag | grep v${RELEASE_CUT_DATE}- | sort -r | head -n 1 | sed s/v${RELEASE_CUT_DATE}-//`
           LATEST_TAG=`git tag | sort -r | head -n 1`
           NEXT_VERSION=$((${PREV_VERSION:-0}+1))
           NEXT_TAG=v"$RELEASE_CUT_DATE"-"$NEXT_VERSION"
+
           COMMON_ANCESTOR=`git merge-base ${GITHUB_SHA} ${LATEST_TAG}`
           DIFF_COMMITS=`git rev-list --abbrev-commit --format=oneline ${COMMON_ANCESTOR}..${GITHUB_SHA}`
+
+          # Save DIFF_COMMITS to GITHUB_ENV to keep multiline strings.
           echo "DIFF_COMMITS<<EOF" >> $GITHUB_ENV
           echo "$DIFF_COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          echo "RELEASE_CUT_DATE=${RELEASE_CUT_DATE}"
-          echo "PREV_VERSION=${PREV_VERSION}"
           echo "::set-output name=next_tag::${NEXT_TAG}"
           echo "::set-output name=latest_tag::${LATEST_TAG}"
       - name: Create release branch

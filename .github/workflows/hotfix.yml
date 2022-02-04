@@ -21,14 +21,6 @@ jobs:
           git fetch --prune --unshallow --tags
           NEXT_TAG=${{ github.event.inputs.tag }}-hotfix
           echo "::set-output name=next_tag::${NEXT_TAG}"
-      # - name: Create release branch (git command)
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-      #   run: |
-      #     git config user.name github-actions
-      #     git config user.name github-actions@github.com
-      #     git switch -c hotfix/${{ github.event.inputs.tag }}
-      #     git push --set-upstream origin hotfix/${{ github.event.inputs.tag }}
       # - name: Create release branch
       #   uses: actions/github-script@v5
       #   env:
@@ -74,7 +66,7 @@ jobs:
             GitHub workflow issue.
 
             \`\`\`
-            git checkout ${CURRENT_TAG} && git switch -c hotfix/${CURRENT_TAG}
+            git checkout ${CURRENT_TAG} && git switch -c hotfix/${CURRENT_TAG} && git push --set-upstream origin hotfix/${CURRENT_TAG}
             \`\`\`
 
             - To add fixes:
