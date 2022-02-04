@@ -7,24 +7,28 @@ on:
       tag:
         required: true
         type: string
-  workflow_call:
-    inputs:
-      tag:
-        required: true
-        type: string
 
 jobs:
-  deploy:
+  prep:
     runs-on: ubuntu-18.04
+    outputs:
+      ref: ${{ steps.vars.outputs.ref }}
+      environment: ${{ steps.vars.outputs.environment }}
     steps:
-      - run: echo ${{ github.ref }}
-      - run: echo "${{ github.event.inputs.tag }}"
-      - run: |
+      - name: Set variables
+        id: vars
+        run: |
           REF=${{ github.ref }}
           TAG=${{ github.event.inputs.tag }}
-          echo $TAG
           if test $TAG; then REF="refs/tags/$TAG"; fi
-          echo $REF
-      # - uses: actions/checkout@v2
-      #   with:
-      #     ref: refs/tags/${{ github.event.inputs.tag }}
+          ENVIRONMENT="staging"
+          [[ $REF = refs/tags/* ]] && ENVIRONMENT="production"
+          echo "::set-output name=ref::${REF}"
+          echo "::set-output name=environment::${ENVIRONMENT}"
+  test:
+    runs-on: ubuntu-18.04
+    needs: prep
+    steps:
+      - run: |
+          echo ${{ needs.prep.outputs.ref }}
+          echo ${{ needs.prep.outputs.environment }}
