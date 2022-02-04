@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  # TODO: Turn on after testing
+  # push:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+jobs:
+  env:
+    uses: ./.github/workflows/env.yml
+    with:
+      tag: ${{ github.event.inputs.tag }}
+  zeffo-test:
+    needs: [env]
+    uses: ./.github/workflows/shared/zeffoTest.yml
+    with:
+      ref: ${{ needs.env.outputs.ref }}
+  embed-test:
+    needs: [env]
+    uses: ./.github/workflows/shared/embedTest.yml
+    with:
+      ref: ${{ needs.env.outputs.ref }}
+      environment: ${{ needs.env.outputs.environment }}
+  zeffo-deploy:
+    needs: [env, zeffo-test]
+    if: ${{ github.event.inputs.environment != "develop" }}
+    uses: ./.github/workflows/shared/zeffoDeploy.yml
+    with:
+      ref: ${{ needs.env.outputs.ref }}
+      environment: ${{ needs.env.outputs.environment }}
+      release_version: ${{  needs.env.outputs.release_version }}
+  embed-deploy:
+    needs: [env, embed-test]
+    if: ${{ github.event.inputs.environment != "develop" }}
+    uses: ./.github/workflows/shared/embedDeploy.yml
+    with:
+      ref: ${{ needs.env.outputs.ref }}
+      environment: ${{ needs.env.outputs.environment }}
+      release_version: ${{  needs.env.outputs.release_version }}
