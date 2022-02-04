@@ -1,5 +1,5 @@
 # This workflow creates an issue to start the hotfix.
-name: Creat Hotfix
+name: Create Hotfix
 
 on:
   workflow_dispatch:
