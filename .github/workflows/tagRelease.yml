@@ -15,8 +15,8 @@ jobs:
         run: |
           TAG_HEADER="### Release tag: "
           BRANCH_HEADER="### Branch: "
-          TAG=`echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//"`
-          BRANCH=`echo "${{ github.event.issue.body }}" | grep -m 1 "${BRANCH_HEADER}" | sed "s/${BRANCH_HEADER}//"`
+          TAG=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//")
+          BRANCH=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${BRANCH_HEADER}" | sed "s/${BRANCH_HEADER}//")
           echo "::set-output name=tag::${TAG}"
           echo "::set-output name=branch::${BRANCH}"
       - name: Tag commit
