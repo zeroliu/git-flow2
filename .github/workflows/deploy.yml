@@ -1,6 +1,6 @@
 name: Deploy a build
 
-oon:
+on:
   push:
   workflow_dispatch:
     inputs:
