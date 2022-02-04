@@ -32,7 +32,7 @@ jobs:
               repo: context.repo.repo,
               ref: `tags/${CURRENT_TAG}`
             })
-            const {sha} = ref.data.object.sha
+            const {sha} = ref.data.object
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
