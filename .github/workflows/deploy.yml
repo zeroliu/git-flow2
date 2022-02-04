@@ -10,7 +10,7 @@ on:
 
 jobs:
   prep:
-    uses: ./.github/actions/shared_var@main
+    uses: ./.github/workflows/shared_var@main
     with:
       tag: ${{ github.event.inputs.tag }}
   test:
