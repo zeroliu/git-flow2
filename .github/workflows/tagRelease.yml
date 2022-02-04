@@ -16,7 +16,7 @@ jobs:
           TAG_HEADER="### Release tag: "
           TAG=`echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//"`
           echo "::set-output name=tag::${TAG}"
-      - name:
+      - name: Tag commit
         uses: actions/github-script@v5
         env:
           TAG: ${{steps.vars.outputs.tag}}
