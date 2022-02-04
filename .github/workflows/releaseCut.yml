@@ -1,7 +1,6 @@
 name: Create a release candidate
 
-on: push
-# on: workflow_dispatch
+on: workflow_dispatch
 
 jobs:
   creation:
