@@ -1,4 +1,4 @@
-# This workflow creates an issue to start the hotfix.
+# This workflow creates a hotfix branch and an issue to track the hotfix.
 name: Create Hotfix
 
 on:
@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
           CURRENT_TAG: ${{ github.event.inputs.tag }}
         with:
-          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const {CURRENT_TAG} = process.env
             const ref = await github.rest.git.getRef({
@@ -57,7 +57,7 @@ jobs:
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Release candidate ${NEXT_TAG}`,
+              title: `Hotfix for ${NEXT_TAG}`,
               labels: ['RC'],
               body: `
             ### Release tag: ${NEXT_TAG}
