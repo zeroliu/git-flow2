@@ -11,6 +11,7 @@ jobs:
   create_hotfix:
     runs-on: ubuntu-18.04
     steps:
+      - run: echo "Creating hotfix for ${{ github.event.inputs.tag }}"
       - uses: actions/checkout@v2
         with:
           ref: refs/tags/${{ github.event.inputs.tag }}
