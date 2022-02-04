@@ -39,7 +39,7 @@ jobs:
         env:
           NEXT_TAG: ${{steps.vars.outputs.next_tag}}
         with:
-          github-token: ${{secrets.WORKFLOW_TOKEN}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             await github.rest.git.createRef({
               owner: context.repo.owner,
