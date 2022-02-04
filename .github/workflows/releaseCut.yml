@@ -50,16 +50,18 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            const {NEXT_TAG, LATEST_TAG} = process.env
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Release candidate ${process.env.NEXT_TAG}`,
+              title: `Release candidate ${NEXT_TAG}`,
               labels: ['RC'],
               body: `
-            ### Release tag: ${process.env.NEXT_TAG}
+            ### Release tag: ${NEXT_TAG}
+            ### Branch: release/${NEXT_TAG}
 
             - To add release fixes:
-              1. \`git checkout release/${process.env.NEXT_TAG}\`
+              1. \`git checkout release/${NEXT_TAG}\`
               2. Check in fixes to the release branch.
               3. (If applied) Cherry-pick the fix to \`master\`.
             - To approve the push: Add \`golden\` label and close the issue.
