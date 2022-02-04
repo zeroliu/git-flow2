@@ -19,7 +19,11 @@ jobs:
     steps:
       - run: echo ${{ github.ref }}
       - run: echo "${{ toJSON(github.event) }}"
-      - run: echo "${{ github.event.inputs.tag && 'refs/tags/'github.event.inputs.tag || github.ref}}"
+      - run: |
+        REF=${{ github.ref }}
+        TAG=${{ github.event.inputs.tag }}
+        if [ -z $TAG ]; then REF="refs/tags/$TAG"; fi
+        echo $REF
       # - uses: actions/checkout@v2
       #   with:
       #     ref: refs/tags/${{ github.event.inputs.tag }}
