@@ -14,6 +14,7 @@ jobs:
 
   test:
     runs-on: ubuntu-18.04
+    needs: prep
     steps:
       - run: |
           echo ${{ needs.prep.outputs.ref }}
