@@ -30,7 +30,7 @@ jobs:
             const ref = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `refs/tags/${CURRENT_TAG}`
+              ref: `tags/${CURRENT_TAG}`
             })
             console.log(ref)
             await github.rest.git.createRef({
