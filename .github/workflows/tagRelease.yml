@@ -1,0 +1,14 @@
+name: Tag a commit as release candidate
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  tag_commit:
+    runs-on: ubuntu-18.04
+    if: ${{ contains(github.event.issue.labels.*.name, 'golden'}}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set variables
+        run: echo "Running tag commit workflow"
