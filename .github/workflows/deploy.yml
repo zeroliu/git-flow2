@@ -9,15 +9,12 @@ on:
         type: string
 
 jobs:
-  prep:
-    uses: ./.github/workflows/sharedVar.yml
-    with:
-      tag: ${{ github.event.inputs.tag }}
   test:
     runs-on: ubuntu-18.04
-    needs: prep
     steps:
+      - id: vars
+        uses: ./.github/actions/zeffoEnv
       - run: |
-          echo ${{ needs.prep.outputs.ref }}
-          echo ${{ needs.prep.outputs.environment }}
-          echo ${{ needs.prep.outputs.release_version }}
+          echo ${{ steps.vars.outputs.ref }}
+          echo ${{ steps.vars.outputs.environment }}
+          echo ${{ steps.vars.outputs.release_version }}
