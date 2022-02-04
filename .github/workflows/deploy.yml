@@ -17,7 +17,7 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04
     steps:
-      - run: ${{ github.ref }}
+      - run: echo ${{ github.ref }}
       # - uses: actions/checkout@v2
       #   with:
       #     ref: refs/tags/${{ github.event.inputs.tag }}
