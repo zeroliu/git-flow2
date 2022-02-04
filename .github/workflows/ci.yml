@@ -16,19 +16,19 @@ jobs:
       tag: ${{ github.event.inputs.tag }}
   zeffo-test:
     needs: [env]
-    uses: ./.github/workflows/shared/zeffoTest.yml
+    uses: ./.github/workflows/zeffoTest.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
   embed-test:
     needs: [env]
-    uses: ./.github/workflows/shared/embedTest.yml
+    uses: ./.github/workflows/embedTest.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
   zeffo-deploy:
     needs: [env, zeffo-test]
     if: ${{ github.event.inputs.environment != "develop" }}
-    uses: ./.github/workflows/shared/zeffoDeploy.yml
+    uses: ./.github/workflows/zeffoDeploy.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
@@ -36,7 +36,7 @@ jobs:
   embed-deploy:
     needs: [env, embed-test]
     if: ${{ github.event.inputs.environment != "develop" }}
-    uses: ./.github/workflows/shared/embedDeploy.yml
+    uses: ./.github/workflows/embedDeploy.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
