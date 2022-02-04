@@ -26,11 +26,17 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log(context.sha)
+            const {CURRENT_TAG} = process.env
+            const ref = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${CURRENT_TAG}`
+            })
+            console.log(ref)
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `refs/heads/hotfix/${process.env.CURRENT_TAG}`,
+              ref: `refs/heads/hotfix/${CURRENT_TAG}`,
               sha: context.sha
             })
       - name: Create release issue
