@@ -1,4 +1,4 @@
-name: Tag a commit as release candidate
+name: Tag RC
 
 on:
   issues:
