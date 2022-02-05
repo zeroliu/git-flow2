@@ -41,7 +41,8 @@ jobs:
               ref: `refs/heads/hotfix/${CURRENT_TAG}`,
               sha
             })
-      - name: Create release issue
+      - name: Create issue
+        id: create-issue
         if: ${{ success() }}
         uses: actions/github-script@v5
         env:
@@ -49,10 +50,11 @@ jobs:
           CURRENT_TAG: ${{ github.event.inputs.tag }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
           script: |
             const {NEXT_TAG, CURRENT_TAG} = process.env
 
-            await github.rest.issues.create({
+            const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `Hotfix for ${NEXT_TAG}`,
@@ -75,5 +77,40 @@ jobs:
             - To cancel the push: Close the issue directly.
             `,
             })
-      - name: Notify slack channel
-        run: echo "Notify slack channel"
+
+            return issue.data.html_url
+      - name: Post to a Slack channel
+        id: slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "[${{ steps.vars.outputs.next_tag }}] 🩹 Hotfix release created 🧐"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Please commit your fixes to hotfix/${{ github.event.inputs.tag }}."
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Publish"
+                    },
+                    "url": "${{ steps.create-issue.outputs.result }}",
+                    "action_id": "button-action"
+                  }
+                }
+              ]
+            }

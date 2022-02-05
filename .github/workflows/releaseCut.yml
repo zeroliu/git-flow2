@@ -49,8 +49,8 @@ jobs:
               ref: `refs/heads/release/${process.env.NEXT_TAG}`,
               sha: context.sha
             })
-      - name: Create release issue
-        id: create-release-issue
+      - name: Create issue
+        id: create-issue
         if: ${{ success() }}
         uses: actions/github-script@v5
         env:
@@ -88,6 +88,7 @@ jobs:
             ${process.env.DIFF_COMMITS}
             `,
             })
+
             return issue.data.html_url
       - name: Post to a Slack channel
         id: slack
@@ -118,7 +119,7 @@ jobs:
                       "type": "plain_text",
                       "text": "Open issue"
                     },
-                    "url": "${{ steps.create-release-issue.outputs.result }}",
+                    "url": "${{ steps.create-issue.outputs.result }}",
                     "action_id": "button-action"
                   }
                 }
