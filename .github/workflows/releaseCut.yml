@@ -118,7 +118,7 @@ jobs:
                     "type": "button",
                     "text": {
                       "type": "plain_text",
-                      "text": "Release issue",
+                      "text": "Release issue"
                     },
                     "url": "$ISSUE_URL",
                     "action_id": "button-action"

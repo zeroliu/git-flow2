@@ -54,8 +54,8 @@ jobs:
 
   cleanup_release_branch:
     runs-on: ubuntu-18.04
-    if: ${{ always() && !contains(github.event.issue.labels.*.name, 'QA Approved') }}
-    needs: [env, create_release]
+    if: ${{ !contains(github.event.issue.labels.*.name, 'QA Approved') }}
+    needs: [env]
     steps:
       - name: Delete branch
         uses: actions/github-script@v5
