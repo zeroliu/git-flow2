@@ -103,20 +103,20 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "Release ${{ steps.vars.outputs.next_tag }} is ready to be tested!"
+                    "text": "[${{ steps.vars.outputs.next_tag }}] ✂️ Release cut"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Checkout the release tracking issue."
+                    "text": "The release candidate is ready for testing."
                   },
                   "accessory": {
                     "type": "button",
                     "text": {
                       "type": "plain_text",
-                      "text": "Release issue"
+                      "text": "Open issue"
                     },
                     "url": "${{ steps.create-release-issue.outputs.result }}",
                     "action_id": "button-action"
