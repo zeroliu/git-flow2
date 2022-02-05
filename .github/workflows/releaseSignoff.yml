@@ -29,7 +29,7 @@ jobs:
   tag_commit:
     runs-on: ubuntu-18.04
     needs: [env]
-    if: ${{ contains(github.event.issue.labels.*.name, 'golden') }}
+    if: ${{ contains(github.event.issue.labels.*.name, 'QA Approved') }}
     steps:
       - uses: actions/checkout@v2
       - name: Tag commit
@@ -38,26 +38,23 @@ jobs:
           TAG: ${{needs.env.outputs.tag}}
           BRANCH: ${{needs.env.outputs.branch}}
         with:
-          # Use the personal token so it can trigger the CI workflow.
-          github-token: ${{secrets.WORKFLOW_TOKEN}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const {TAG, BRANCH} = process.env
-            const branch = await github.rest.repos.getBranch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: BRANCH
-            })
-            const {sha} = branch.data.commit
-            await github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${TAG}`,
-              sha,
+            const {owner, repo} = context.repo
+
+            await github.rest.repos.createRelease({
+              owner,
+              repo,
+              tag_name: TAG,
+              draft: true,
+              target_commitish: BRANCH
             })
 
   delete_release_branch:
     runs-on: ubuntu-18.04
     if: ${{ always() }}
+    if: ${{ !contains(github.event.issue.labels.*.name, 'QA Approved') }}
     needs: [env, tag_commit]
     steps:
       - name: Delete branch
@@ -66,7 +63,6 @@ jobs:
           BRANCH: ${{needs.env.outputs.branch}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          # Different from createRef, `ref` param takes the part after `refs/`
           script: |
             await github.rest.git.deleteRef({
               owner: context.repo.owner,
