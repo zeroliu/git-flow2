@@ -1,5 +1,5 @@
 # This workflow creates a hotfix branch and an issue to track the hotfix.
-name: Create Hotfix
+name: ▶️ Create Hotfix
 
 on:
   workflow_dispatch:
