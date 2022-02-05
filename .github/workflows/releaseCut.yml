@@ -88,7 +88,7 @@ jobs:
             ${process.env.DIFF_COMMITS}
             `,
             })
-            return `https://github.com/${issue.data.html_url}`
+            return issue.data.html_url
       - name: Post to a Slack channel
         id: slack
         env:
