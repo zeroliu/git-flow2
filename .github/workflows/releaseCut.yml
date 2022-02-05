@@ -5,7 +5,7 @@ name: ▶️ Create RC
 on: workflow_dispatch
 
 jobs:
-  create_rc:
+  create-rc:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -103,7 +103,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "[${{ steps.vars.outputs.next_tag }}] ✂️ Release cut"
+                    "text": "[${{ steps.vars.outputs.next_tag }}] ✂️ Release cut 🤞"
                   }
                 },
                 {

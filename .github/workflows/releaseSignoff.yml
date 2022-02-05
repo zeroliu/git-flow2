@@ -26,13 +26,14 @@ jobs:
           echo "::set-output name=tag::${TAG}"
           echo "::set-output name=branch::${BRANCH}"
 
-  create_release:
+  release:
     runs-on: ubuntu-18.04
     needs: [env]
     if: ${{ contains(github.event.issue.labels.*.name, 'QA Approved') }}
     steps:
       - uses: actions/checkout@v2
-      - name: Tag commit
+      - name: Create release
+        id: create-release
         uses: actions/github-script@v5
         env:
           TAG: ${{needs.env.outputs.tag}}
@@ -43,7 +44,7 @@ jobs:
             const {TAG, BRANCH} = process.env
             const {owner, repo} = context.repo
 
-            await github.rest.repos.createRelease({
+            const release = await github.rest.repos.createRelease({
               owner,
               repo,
               name: TAG,
@@ -51,6 +52,43 @@ jobs:
               draft: true,
               target_commitish: BRANCH
             })
+
+            return release.data.html_url
+      - name: Post to a Slack channel
+        id: slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "[${{needs.env.outputs.tag}}] ✅ Release approved ☺️"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "The release candidate is approved for release."
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Publish"
+                    },
+                    "url": "${{ steps.create-release.outputs.result }}",
+                    "action_id": "button-action"
+                  }
+                }
+              ]
+            }
 
   cleanup_release_branch:
     runs-on: ubuntu-18.04
