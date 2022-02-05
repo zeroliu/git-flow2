@@ -83,7 +83,7 @@ jobs:
             - To approve the push: Add \`QA Approved\` label and close the issue.
             - To cancel the push: Close the issue directly.
 
-            ## Included commits
+            ## Included commits (compared to ${LATEST_TAG})
 
             ${process.env.DIFF_COMMITS}
             `,
