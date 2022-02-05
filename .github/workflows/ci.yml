@@ -1,8 +1,7 @@
 name: CI
 
 on:
-  # TODO: Turn on after testing
-  # push:
+  push:
   workflow_dispatch:
     inputs:
       tag:
