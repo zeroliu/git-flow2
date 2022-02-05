@@ -1,6 +1,7 @@
 # This workflow creates a release branch and an issue to track the release.
 name: ▶️ Create RC
 
+# TODO: add scheduled after testing.
 on: workflow_dispatch
 
 jobs:
@@ -39,6 +40,7 @@ jobs:
         env:
           NEXT_TAG: ${{steps.vars.outputs.next_tag}}
         with:
+          # Use the personal token so it can trigger the CI workflow.
           github-token: ${{secrets.WORKFLOW_TOKEN}}
           script: |
             await github.rest.git.createRef({
@@ -63,8 +65,14 @@ jobs:
               title: `Release candidate ${NEXT_TAG}`,
               labels: ['RC'],
               body: `
-            ### Release tag: ${NEXT_TAG}
-            ### Branch: release/${NEXT_TAG}
+            **WARNING: Script generated description. DO NOT MODIFY**
+
+            ## Metadata
+
+            - Release tag: ${NEXT_TAG}
+            - Branch: release/${NEXT_TAG}
+
+            ## Actions
 
             - To add release fixes:
               1. \`git checkout release/${NEXT_TAG}\`
@@ -73,12 +81,10 @@ jobs:
             - To approve the push: Add \`golden\` label and close the issue.
             - To cancel the push: Close the issue directly.
 
-            ### Included commits
+            ## Included commits
 
             ${process.env.DIFF_COMMITS}
             `,
             })
-      - name: Deploy to staging
-        run: echo "Deploy to staging"
       - name: Notify slack channel
         run: echo "Notify slack channel"
