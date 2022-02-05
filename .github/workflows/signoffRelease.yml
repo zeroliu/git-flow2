@@ -1,0 +1,73 @@
+# Tag the last commit in the release/hotfix branch with the target version, then
+# trigger deploy.
+name: Sign off RC
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  env:
+    runs-on: ubuntu-18.04
+    if: ${{ contains(github.event.issue.labels.*.name, 'RC') }}
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
+      branch: ${{ steps.vars.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set variables
+        id: vars
+        run: |
+          # Extract tag and branch info from the issue description.
+          TAG_HEADER="\- Release tag: "
+          BRANCH_HEADER="\- Branch: "
+          TAG=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//")
+          BRANCH=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${BRANCH_HEADER}" | sed "s/${BRANCH_HEADER}//")
+          echo "::set-output name=tag::${TAG}"
+          echo "::set-output name=branch::${BRANCH}"
+
+  tag_commit:
+    runs-on: ubuntu-18.04
+    needs: [env]
+    if: ${{ contains(github.event.issue.labels.*.name, 'golden') }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Tag commit
+        uses: actions/github-script@v5
+        env:
+          TAG: ${{needs.env.outputs.tag}}
+          BRANCH: ${{needs.env.outputs.branch}}
+        with:
+          # Use the personal token so it can trigger the CI workflow.
+          github-token: ${{secrets.WORKFLOW_TOKEN}}
+          script: |
+            const {TAG, BRANCH} = process.env
+            const branch = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: BRANCH
+            })
+            const {sha} = branch.data.commit
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${TAG}`,
+              sha,
+            })
+
+  delete_release_branch:
+    runs-on: ubuntu-18.04
+    needs: [env]
+    steps:
+      - name: Delete branch
+        uses: actions/github-script@v5
+        env:
+          BRANCH: ${{needs.env.outputs.branch}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/heads/${process.env.BRANCH}`
+            })
