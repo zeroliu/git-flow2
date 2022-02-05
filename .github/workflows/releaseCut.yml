@@ -1,5 +1,5 @@
 # This workflow creates a release branch and an issue to track the release.
-name: Create RC
+name: ▶️ Create RC
 
 on: workflow_dispatch
 
