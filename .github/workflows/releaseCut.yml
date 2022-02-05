@@ -5,7 +5,7 @@ name: ▶️ Create RC
 on: workflow_dispatch
 
 jobs:
-  create_release:
+  create_rc:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2

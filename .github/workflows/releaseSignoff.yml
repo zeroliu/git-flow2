@@ -26,7 +26,7 @@ jobs:
           echo "::set-output name=tag::${TAG}"
           echo "::set-output name=branch::${BRANCH}"
 
-  tag_commit:
+  create_release:
     runs-on: ubuntu-18.04
     needs: [env]
     if: ${{ contains(github.event.issue.labels.*.name, 'QA Approved') }}
@@ -46,12 +46,13 @@ jobs:
             await github.rest.repos.createRelease({
               owner,
               repo,
+              name: TAG,
               tag_name: TAG,
               draft: true,
               target_commitish: BRANCH
             })
 
-  delete_release_branch:
+  cleanup_release_branch:
     runs-on: ubuntu-18.04
     if: ${{ !contains(github.event.issue.labels.*.name, 'QA Approved') }}
     needs: [env, tag_commit]
