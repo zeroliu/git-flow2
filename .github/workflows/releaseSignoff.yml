@@ -40,6 +40,7 @@ jobs:
           BRANCH: ${{needs.env.outputs.branch}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
           script: |
             const {TAG, BRANCH} = process.env
             const {owner, repo} = context.repo
@@ -53,6 +54,7 @@ jobs:
               target_commitish: BRANCH
             })
 
+            console.log(release)
             return release.data.html_url
       - name: Post to a Slack channel
         id: slack
