@@ -78,7 +78,7 @@ jobs:
               1. \`git checkout release/${NEXT_TAG}\`
               2. Check in fixes to the release branch.
               3. (If applied) Cherry-pick the fix to \`master\`.
-            - To approve the push: Add \`golden\` label and close the issue.
+            - To approve the push: Add \`QA Approved\` label and close the issue.
             - To cancel the push: Close the issue directly.
 
             ## Included commits
