@@ -94,6 +94,8 @@ jobs:
         env:
           NEXT_TAG: ${{ steps.vars.outputs.next_tag }}
           ISSUE_URL: ${{ steps.create-release-issue.outputs.result }}
+          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
         uses: slackapi/slack-github-action@v1.16.0
         with:
           payload: |
@@ -124,6 +126,3 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
