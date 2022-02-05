@@ -26,8 +26,6 @@ jobs:
         env:
           CURRENT_TAG: ${{ github.event.inputs.tag }}
         with:
-          # A custom token with workflow permission is needed to create a branch
-          # from a legacy tag.
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
           script: |
             const {CURRENT_TAG} = process.env
@@ -60,7 +58,7 @@ jobs:
               title: `Hotfix for ${NEXT_TAG}`,
               labels: ['RC'],
               body: `
-            **WARNING: Script generated description. DO NOT MODIFY**
+            **Script generated description. DO NOT MODIFY**
 
             ## Metadata
 
@@ -73,7 +71,7 @@ jobs:
               1. \`git checkout hotfix/${CURRENT_TAG}\`
               2. Check in fixes to the release branch.
               3. (If applied) Cherry-pick the fix to \`master\`.
-            - To approve the push: Add \`golden\` label and close the issue.
+            - To approve the push: Add \`QA Approved\` label and close the issue.
             - To cancel the push: Close the issue directly.
             `,
             })

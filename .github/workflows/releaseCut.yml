@@ -50,6 +50,7 @@ jobs:
               sha: context.sha
             })
       - name: Create release issue
+        id: create-release-issue
         if: ${{ success() }}
         uses: actions/github-script@v5
         env:
@@ -59,13 +60,13 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const {NEXT_TAG, LATEST_TAG} = process.env
-            await github.rest.issues.create({
+            const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `Release candidate ${NEXT_TAG}`,
               labels: ['RC'],
               body: `
-            **WARNING: Script generated description. DO NOT MODIFY**
+            **Script generated description. DO NOT MODIFY**
 
             ## Metadata
 
@@ -86,5 +87,43 @@ jobs:
             ${process.env.DIFF_COMMITS}
             `,
             })
-      - name: Notify slack channel
-        run: echo "Notify slack channel"
+
+            return issue.url
+      - name: Post to a Slack channel
+        id: slack
+        env:
+          NEXT_TAG: ${{ steps.vars.outputs.next_tag }}
+          ISSUE_URL: ${{ steps.create-release-issue.outputs.result }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Release $NEXT_TAG is ready to be tested!",
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Checkout the release tracking issue."
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Release issue",
+                    },
+                    "url": $ISSUE_URL,
+                    "action_id": "button-action"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
