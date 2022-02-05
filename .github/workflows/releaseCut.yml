@@ -120,7 +120,7 @@ jobs:
                       "type": "plain_text",
                       "text": "Release issue",
                     },
-                    "url": $ISSUE_URL,
+                    "url": "$ISSUE_URL",
                     "action_id": "button-action"
                   }
                 }
