@@ -87,7 +87,7 @@ jobs:
             ${process.env.DIFF_COMMITS}
             `,
             })
-
+            console.log(issue)
             return issue.html_url
       - name: Post to a Slack channel
         id: slack
