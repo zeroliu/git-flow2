@@ -13,6 +13,12 @@ jobs:
     uses: ./.github/workflows/env.yml
     with:
       tag: ${{ github.event.inputs.tag }}
+  test:
+    needs: [env]
+    - run: |
+        echo ${{ needs.env.outputs.ref }}
+        echo ${{ needs.env.outputs.environment }}
+        echo ${{ needs.env.outputs.release_version }}
   zeffo-test:
     needs: [env]
     uses: ./.github/workflows/zeffoTest.yml
