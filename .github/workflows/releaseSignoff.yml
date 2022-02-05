@@ -54,7 +54,6 @@ jobs:
               target_commitish: BRANCH
             })
 
-            console.log(release)
             return release.data.html_url
       - name: Post to a Slack channel
         id: slack
