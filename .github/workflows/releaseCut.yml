@@ -20,7 +20,7 @@ jobs:
           # Create a new tag based on the latest tag.
           RELEASE_CUT_DATE=`TZ=America/Los_Angeles date +'%Y%m%d'`
           PREV_VERSION=`git tag | grep v${RELEASE_CUT_DATE}- | sort --version-sort -r | head -n 1 | sed -E 's/v[0-9]*-([0-9]*).*/\1/'`
-          LATEST_TAG=`git tag | sort -r | head -n 1`
+          LATEST_TAG=`git tag | sort --version-sort -r | head -n 1`
           NEXT_VERSION=$((${PREV_VERSION:-0}+1))
           NEXT_TAG=v"$RELEASE_CUT_DATE"-"$NEXT_VERSION"
 
