@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - run: |
-        echo ${{ github.event.inputs.ref }}
-        echo ${{ github.event.inputs.environment }}
-        echo ${{ github.event.inputs.release_version }}
+          echo ${{ github.event.inputs.ref }}
+          echo ${{ github.event.inputs.environment }}
+          echo ${{ github.event.inputs.release_version }}
