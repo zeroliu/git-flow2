@@ -52,7 +52,7 @@ jobs:
       release_version: ${{  needs.env.outputs.release_version }}
   notify:
     needs: [env, zeffo-deploy, embed-deploy]
-    if: ${{ needs.env.outputs.environment == "production" }}
+    if: ${{ needs.env.outputs.environment == 'production' }}
     runs-on: ubuntu-18.04
     steps:
       - name: Post to a Slack channel
