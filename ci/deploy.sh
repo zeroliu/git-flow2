@@ -2,5 +2,5 @@
 # -*- coding: utf-8 -*-
 
 set -e
-node ci/purgeEc.js
+node ci/deploy.js
 echo "hello"
