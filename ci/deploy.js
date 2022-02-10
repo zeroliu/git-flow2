@@ -13,7 +13,7 @@ async function fail() {
 (async () => {
   try {
     await fail();
-    console.log(baseDomains['foo'][0]);
+    // console.log(baseDomains['foo'][0]);
   } catch (e) {
     console.log(e);
     process.exit(1);
