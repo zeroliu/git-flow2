@@ -32,6 +32,10 @@ jobs:
             REG='refs/tags/(.*)'
             [[ $REF =~ $REG ]]
             RELEASE_VERSION=${BASH_REMATCH[1]}
+          elif [[ $REF == refs/heads/release/* ]]; then
+            REG='refs/heads/release/(.*)'
+            [[ $REF =~ $REG ]]
+            RELEASE_VERSION=${BASH_REMATCH[1]}-staging
           fi
           echo "::set-output name=ref::${REF}"
           echo "::set-output name=environment::${ENVIRONMENT}"
