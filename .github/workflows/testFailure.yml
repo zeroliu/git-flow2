@@ -1,4 +1,4 @@
-name: Embed Test
+name: Test failing bash
 
 on: push
 
@@ -6,5 +6,6 @@ jobs:
   test:
     runs-on: ubuntu-18.04
     steps:
+      - uses: actions/checkout@v2
       - run: |
           ./ci/deploy.sh
