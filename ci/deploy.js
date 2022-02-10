@@ -4,6 +4,11 @@ const baseDomains = {
 };
 
 (async () => {
-  await console.log('in async');
-  console.log(baseDomains['foo'][0]);
+  try {
+    await console.log('in async');
+    console.log(baseDomains['foo'][0]);
+  } catch (e) {
+    console.log(e);
+    process.exit(1);
+  }
 })();
