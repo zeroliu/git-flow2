@@ -79,38 +79,38 @@ jobs:
             })
 
             return issue.data.html_url
-      - name: Post to a Slack channel
-        id: slack
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "[${{ steps.vars.outputs.next_tag }}] 🩹 Hotfix branch created 🧐"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Please commit your fixes to hotfix/${{ github.event.inputs.tag }}."
-                  },
-                  "accessory": {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Open issue"
-                    },
-                    "url": "${{ steps.create-issue.outputs.result }}",
-                    "action_id": "button-action"
-                  }
-                }
-              ]
-            }
+      # - name: Post to a Slack channel
+      #   id: slack
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      #   uses: slackapi/slack-github-action@v1.16.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "[${{ steps.vars.outputs.next_tag }}] 🩹 Hotfix branch created 🧐"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "Please commit your fixes to hotfix/${{ github.event.inputs.tag }}."
+      #             },
+      #             "accessory": {
+      #               "type": "button",
+      #               "text": {
+      #                 "type": "plain_text",
+      #                 "text": "Open issue"
+      #               },
+      #               "url": "${{ steps.create-issue.outputs.result }}",
+      #               "action_id": "button-action"
+      #             }
+      #           }
+      #         ]
+      #       }

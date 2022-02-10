@@ -108,29 +108,29 @@ jobs:
               repo: context.repo.repo,
               ref: `heads/${process.env.BRANCH}`
             })
-      - name: Post to a Slack channel
-        id: slack
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "[${{needs.env.outputs.tag}}] ❌ Release cancelled 😢"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "The release candidate is cancelled."
-                  }
-                }
-              ]
-            }
+      # - name: Post to a Slack channel
+      #   id: slack
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      #   uses: slackapi/slack-github-action@v1.16.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "[${{needs.env.outputs.tag}}] ❌ Release cancelled 😢"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "The release candidate is cancelled."
+      #             }
+      #           }
+      #         ]
+      #       }

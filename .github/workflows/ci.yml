@@ -75,34 +75,34 @@ jobs:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
       release_version: ${{  needs.env.outputs.release_version }}
-  notify:
-    needs: [env, zeffo-deploy, embed-deploy]
-    if: ${{ needs.env.outputs.environment == 'production' }}
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Post to a Slack channel
-        id: slack
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "[${{ needs.env.outputs.release_version }}] 🚀 Release launched 🤩"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Great job! Please monitor the release for the next hour."
-                  }
-                }
-              ]
-            }
+  # notify:
+  #   needs: [env, zeffo-deploy, embed-deploy]
+  #   if: ${{ needs.env.outputs.environment == 'production' }}
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - name: Post to a Slack channel
+  #       id: slack
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+  #         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  #       uses: slackapi/slack-github-action@v1.16.0
+  #       with:
+  #         payload: |
+  #           {
+  #             "blocks": [
+  #               {
+  #                 "type": "header",
+  #                 "text": {
+  #                   "type": "plain_text",
+  #                   "text": "[${{ needs.env.outputs.release_version }}] 🚀 Release launched 🤩"
+  #                 }
+  #               },
+  #               {
+  #                 "type": "section",
+  #                 "text": {
+  #                   "type": "mrkdwn",
+  #                   "text": "Great job! Please monitor the release for the next hour."
+  #                 }
+  #               }
+  #             ]
+  #           }
