@@ -4,5 +4,6 @@ const baseDomains = {
 };
 
 (async () => {
+  await console.log('in async');
   console.log(baseDomains['foo'][0]);
 })();
