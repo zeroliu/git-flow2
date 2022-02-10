@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - run: |
-        ./ci/deploy.sh
+          ./ci/deploy.sh
