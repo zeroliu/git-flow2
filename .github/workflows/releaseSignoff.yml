@@ -55,41 +55,41 @@ jobs:
             })
 
             return release.data.html_url
-      - name: Post to a Slack channel
-        id: slack
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "[${{needs.env.outputs.tag}}] ✅ Release approved ☺️"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "The release candidate is approved for publishing."
-                  },
-                  "accessory": {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Publish"
-                    },
-                    "url": "${{ steps.create-release.outputs.result }}",
-                    "action_id": "button-action"
-                  }
-                }
-              ]
-            }
+      # - name: Post to a Slack channel
+      #   id: slack
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      #   uses: slackapi/slack-github-action@v1.16.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "[${{needs.env.outputs.tag}}] ✅ Release approved ☺️"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "The release candidate is approved for publishing."
+      #             },
+      #             "accessory": {
+      #               "type": "button",
+      #               "text": {
+      #                 "type": "plain_text",
+      #                 "text": "Publish"
+      #               },
+      #               "url": "${{ steps.create-release.outputs.result }}",
+      #               "action_id": "button-action"
+      #             }
+      #           }
+      #         ]
+      #       }
 
   cleanup_release_branch:
     runs-on: ubuntu-18.04
