@@ -60,13 +60,13 @@ jobs:
           echo ${{ needs.env.outputs.environment }}
           echo ${{ needs.env.outputs.release_version }}
   zeffo-test:
-    if: ${{ !github.event.inputs.skipTest }}
+    if: ${{ github.event.inputs.skipTest == false }}
     needs: [env]
     uses: ./.github/workflows/zeffoTest.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
   embed-test:
-    if: ${{ !github.event.inputs.skipTest }}
+    if: ${{ github.event.inputs.skipTest == false }}
     needs: [env]
     uses: ./.github/workflows/embedTest.yml
     with:
