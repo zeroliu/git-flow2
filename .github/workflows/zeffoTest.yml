@@ -12,6 +12,12 @@ on:
         default: false
 
 jobs:
+  check:
+    runs-on: ubuntu-18.04
+    steps:
+      - run: |
+          echo ${{ inputs.skipTests }}
+
   test:
     runs-on: ubuntu-18.04
     if: ${{ ! inputs.skipTests }}
