@@ -18,5 +18,3 @@ jobs:
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
           echo ${{ inputs.release_version }}
-      - run: |
-          exit 1
