@@ -15,6 +15,9 @@ jobs:
   test:
     runs-on: ubuntu-18.04
     steps:
+      - name: log input
+        run: |
+          echo ${{ inputs.skipTests }}
       - name: check skip test
         if: ${{ inputs.skipTests }}
         run: exit 0
