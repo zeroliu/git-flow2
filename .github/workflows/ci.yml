@@ -13,7 +13,7 @@ on:
         description: Which tag to deploy
         required: true
         type: string
-      skipTest:
+      skipTests:
         description: Skip tests (Use with cautions)
         required: true
         type: boolean
@@ -59,14 +59,15 @@ jobs:
           echo ${{ needs.env.outputs.ref }}
           echo ${{ needs.env.outputs.environment }}
           echo ${{ needs.env.outputs.release_version }}
+          echo ${{ github.events.inputs.skipTests }}
   zeffo-test:
-    if: ${{ github.event.inputs.skipTest != true }}
+    if: ${{ github.event.inputs.skipTests != true }}
     needs: [env]
     uses: ./.github/workflows/zeffoTest.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
   embed-test:
-    if: ${{ github.event.inputs.skipTest != true }}
+    if: ${{ github.event.inputs.skipTests != true }}
     needs: [env]
     uses: ./.github/workflows/embedTest.yml
     with:
