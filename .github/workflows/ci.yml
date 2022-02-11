@@ -97,6 +97,7 @@ jobs:
       release_version: ${{  needs.env.outputs.release_version }}
   test-status:
     needs: [env, embed-test]
+    if: ${{ always() }}
     runs-on: ubuntu-18.04
     steps:
       - run: |
