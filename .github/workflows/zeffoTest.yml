@@ -29,3 +29,4 @@ jobs:
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
           echo ${{ inputs.release_version }}
+          exit 1
