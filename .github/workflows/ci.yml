@@ -95,6 +95,12 @@ jobs:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
       release_version: ${{  needs.env.outputs.release_version }}
+  test-status:
+    needs: [env, embed-test]
+    runs-on: ubuntu-18.04
+    steps:
+      - run: |
+          echo ${{ needs.embed-test.result }}
   # notify:
   #   needs: [env, zeffo-deploy, embed-deploy]
   #   if: ${{ needs.env.outputs.environment == 'production' }}
