@@ -104,7 +104,7 @@ jobs:
       environment: ${{ needs.env.outputs.environment }}
       release_version: ${{  needs.env.outputs.release_version }}
   embed-deploy-skip-test:
-    needs: [env, embed-test]
+    needs: [env]
     if: ${{ github.event.inputs.skipTests == 'true' && needs.env.outputs.environment != 'develop' }}
     uses: ./.github/workflows/embedDeploy.yml
     with:
