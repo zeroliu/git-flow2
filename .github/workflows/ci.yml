@@ -15,8 +15,8 @@ on:
         type: string
       skipTests:
         description: Skip tests (Use with cautions)
-        required: true
         type: boolean
+        required: false
         default: false
   release:
     types: [published]
@@ -61,9 +61,8 @@ jobs:
           echo ${{ needs.env.outputs.environment }}
           echo ${{ needs.env.outputs.release_version }}
           echo ${{ github.events.inputs.skipTests }}
-          echo ${{ inputs.skipTests }}
           echo ${{ github.events.inputs.skipTests != 1 }}
-          echo ${{ inputs.skipTests != 1 }}
+          echo ${{ github.events.inputs.skipTests != 'true' }}
   zeffo-test:
     if: ${{ github.event.inputs.skipTests != 1 }}
     needs: [env]
