@@ -72,7 +72,7 @@ jobs:
       environment: ${{ needs.env.outputs.environment }}
   zeffo-deploy:
     needs: [env, zeffo-test]
-    if: ${{ needs.env.outputs.environment != 'develop' }}
+    if: ${{ always() && needs.zeffo-test.result != 'failure' && needs.env.outputs.environment != 'develop' }}
     uses: ./.github/workflows/zeffoDeploy.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
@@ -80,7 +80,7 @@ jobs:
       release_version: ${{  needs.env.outputs.release_version }}
   embed-deploy:
     needs: [env, embed-test]
-    if: ${{ needs.env.outputs.environment != 'develop' }}
+    if: ${{ always() && needs.embed-test.result != 'failure' && needs.env.outputs.environment != 'develop' }}
     uses: ./.github/workflows/embedDeploy.yml
     with:
       ref: ${{ needs.env.outputs.ref }}
