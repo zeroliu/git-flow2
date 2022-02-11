@@ -15,8 +15,7 @@ jobs:
   check:
     runs-on: ubuntu-18.04
     steps:
-      - run: |
-          echo ${{ inputs.skipTests }}
+      - run: exit 0
 
   test:
     runs-on: ubuntu-18.04
