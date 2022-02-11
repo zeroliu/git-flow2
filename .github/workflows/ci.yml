@@ -10,9 +10,11 @@ on:
   workflow_dispatch:
     inputs:
       tag:
+        description: Which tag to deploy
         required: true
         type: string
       skipTest:
+        description: Skip tests (Use with cautions)
         required: true
         type: boolean
         default: false
