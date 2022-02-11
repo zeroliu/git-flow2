@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-18.04
     if: ${{ ! inputs.skipTests }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.ref }}
       - run: |
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
