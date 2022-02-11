@@ -14,13 +14,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-18.04
+    if: ${{ ! inputs.skipTests }}
     steps:
-      - name: log input
-        run: |
-          echo ${{ inputs.skipTests }}
-      - name: check skip test
-        if: ${{ inputs.skipTests }}
-        run: exit 0
       - run: |
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
