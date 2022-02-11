@@ -54,6 +54,7 @@ jobs:
           echo "::set-output name=release_version::${RELEASE_VERSION}"
   test:
     runs-on: ubuntu-18.04
+    if: ${{ always() }}
     needs: [env]
     env:
       SKIP_TESTS: ${{ github.event.inputs.skipTests }}
@@ -64,8 +65,7 @@ jobs:
           echo ${{ needs.env.outputs.release_version }}
           echo ${{ github.events.inputs.skipTests }}
           echo $SKIP_TESTS
-          echo ${{ github.events.inputs.skipTests != 1 }}
-          echo ${{ github.events.inputs.skipTests != 'true' }}
+          echo ${{ needs.env.result }}
   zeffo-test:
     if: ${{ github.event.inputs.skipTests != 'true' }}
     needs: [env]
