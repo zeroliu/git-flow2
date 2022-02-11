@@ -3,10 +3,9 @@ name: ▶️ CI
 on:
   push:
     branches:
+      - 'hotfix/**'
       - 'release/**'
       - 'main'
-    tags:
-      - v**
   pull_request:
   workflow_dispatch:
     inputs:
