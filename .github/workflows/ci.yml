@@ -78,6 +78,7 @@ jobs:
     with:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
+      skipTests: ${{ github.event.inputs.skipTests == 'true' }}
   zeffo-deploy:
     needs: [env, zeffo-test]
     if: ${{ needs.env.outputs.environment != 'develop' }}

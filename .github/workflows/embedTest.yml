@@ -9,6 +9,10 @@ on:
       environment:
         required: true
         type: string
+      skipTests:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   check:
