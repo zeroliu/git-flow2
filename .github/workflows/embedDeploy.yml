@@ -22,7 +22,8 @@ jobs:
           echo ${{ inputs.environment }}
           echo ${{ inputs.release_version }}
           echo ${{ github.event.workflow_run.workflow_id }}
-      - uses: dawidd6/action-download-artifact@v2
+      # - uses: dawidd6/action-download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
           workflow: embedBuild.yml
           name: built-artifact
