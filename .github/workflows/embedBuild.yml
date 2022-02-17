@@ -1,4 +1,4 @@
-name: Embed Deploy
+name: Embed Build
 
 on:
   workflow_call:
@@ -21,10 +21,8 @@ jobs:
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
           echo ${{ inputs.release_version }}
-      - uses: dawidd6/action-download-artifact@v2
+          echo ${{ inputs.release_version }} > output.txt
+      - uses: actions/upload-artifact@v2
         with:
-          workflow: embedBuild.yml
           name: built-artifact
           path: output.txt
-      - run: |
-          cat output.txt

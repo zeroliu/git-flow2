@@ -86,8 +86,16 @@ jobs:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
       release_version: ${{  needs.env.outputs.release_version }}
+  embed-build:
+    needs: [env]
+    if: ${{ needs.env.outputs.environment != 'develop' }}
+    uses: ./.github/workflows/embedBuild.yml
+    with:
+      ref: ${{ needs.env.outputs.ref }}
+      environment: ${{ needs.env.outputs.environment }}
+      release_version: ${{  needs.env.outputs.release_version }}
   embed-deploy:
-    needs: [env, embed-test]
+    needs: [env, embed-test, embed-build]
     if: ${{ needs.env.outputs.environment != 'develop' }}
     uses: ./.github/workflows/embedDeploy.yml
     with:
