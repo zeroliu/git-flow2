@@ -11,10 +11,18 @@ on:
         type: string
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-18.04
     steps:
+      - run: exit 0
+
+  test:
+    runs-on: ubuntu-18.04
+    if: ${{ ! inputs.skipTests }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.ref }}
       - run: |
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
-          echo ${{ inputs.release_version }}
