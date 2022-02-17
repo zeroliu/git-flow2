@@ -27,6 +27,5 @@ jobs:
         with:
           workflow: embedBuild.yml
           name: built-artifact
-          path: output.txt
       - run: |
           cat output.txt
