@@ -116,7 +116,7 @@ jobs:
     if: ${{ needs.env.outputs.environment != 'production' }}
     steps:
       - run: |
-          echo ${{ github.event.pull_request }}
+          echo ${{ toJSON(github.event.pull_request) }}
           echo "run chromatic"
   # notify:
   #   needs: [env, zeffo-deploy, embed-deploy]
