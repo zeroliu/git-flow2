@@ -111,14 +111,6 @@ jobs:
     steps:
       - run: |
           echo ${{ needs.embed-test.result }}
-  chromatic:
-    runs-on: ubuntu-18.04
-    needs: [env]
-    if: ${{ github.event.pull_request && !github.event.pull_request.draft }}
-    steps:
-      - run: |
-          echo "draft is: ${{ github.event.pull_request.draft }}"
-          echo "run chromatic"
   # notify:
   #   needs: [env, zeffo-deploy, embed-deploy]
   #   if: ${{ needs.env.outputs.environment == 'production' }}
