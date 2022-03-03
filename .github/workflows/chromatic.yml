@@ -14,9 +14,8 @@ on:
 jobs:
   chromatic:
     runs-on: ubuntu-18.04
-    # if: ${{ github.event.push || (github.event.pull_request && !github.event.pull_request.draft) }}
+    if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: Test
         run: |
           echo "Chromatic is running"
-          echo "${{ github.event.push }}"
