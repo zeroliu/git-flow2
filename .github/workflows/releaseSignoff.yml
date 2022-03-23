@@ -13,5 +13,5 @@ jobs:
         id: sign_off
         uses: loopsocial/sign-off-action@v1.0.11
         with:
-          workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
+          workflow-token: ${{ secrets.GITHUB_TOKEN }}
           slack-webhook-url: 'test'
