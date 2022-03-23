@@ -1,136 +1,17 @@
-# Tag the last commit in the release/hotfix branch with the target version, then
-# trigger deploy.
-name: Sign off RC
+name: Sign Off
 
 on:
   issues:
     types: [closed]
 
 jobs:
-  env:
-    runs-on: ubuntu-18.04
-    if: ${{ contains(github.event.issue.labels.*.name, 'RC') }}
-    outputs:
-      tag: ${{ steps.vars.outputs.tag }}
-      branch: ${{ steps.vars.outputs.branch }}
+  sign_off:
+    runs-on: ubuntu-latest
+    name: Sign Off Release/Hotfix
     steps:
-      - uses: actions/checkout@v2
-      - name: Set variables
-        id: vars
-        run: |
-          # Extract tag and branch info from the issue description.
-          TAG_HEADER="\- Release tag: "
-          BRANCH_HEADER="\- Branch: "
-          TAG=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${TAG_HEADER}" | sed "s/${TAG_HEADER}//")
-          BRANCH=$(echo "${{ github.event.issue.body }}" | grep -m 1 "${BRANCH_HEADER}" | sed "s/${BRANCH_HEADER}//")
-          echo "::set-output name=tag::${TAG}"
-          echo "::set-output name=branch::${BRANCH}"
-
-  release:
-    runs-on: ubuntu-18.04
-    needs: [env]
-    if: ${{ contains(github.event.issue.labels.*.name, 'QA Approved') }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create release
-        id: create-release
-        uses: actions/github-script@v5
-        env:
-          TAG: ${{needs.env.outputs.tag}}
-          BRANCH: ${{needs.env.outputs.branch}}
+      - name: Sign Off Release/Hotfix
+        id: sign_off
+        uses: loopsocial/sign-off-action@v1.0.11
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
-          script: |
-            const {TAG, BRANCH} = process.env
-            const {owner, repo} = context.repo
-
-            const release = await github.rest.repos.createRelease({
-              owner,
-              repo,
-              name: TAG,
-              tag_name: TAG,
-              draft: true,
-              target_commitish: BRANCH
-            })
-
-            return release.data.html_url
-      # - name: Post to a Slack channel
-      #   id: slack
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      #   uses: slackapi/slack-github-action@v1.16.0
-      #   with:
-      #     payload: |
-      #       {
-      #         "blocks": [
-      #           {
-      #             "type": "header",
-      #             "text": {
-      #               "type": "plain_text",
-      #               "text": "[${{needs.env.outputs.tag}}] ✅ Release approved ☺️"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "The release candidate is approved for publishing."
-      #             },
-      #             "accessory": {
-      #               "type": "button",
-      #               "text": {
-      #                 "type": "plain_text",
-      #                 "text": "Publish"
-      #               },
-      #               "url": "${{ steps.create-release.outputs.result }}",
-      #               "action_id": "button-action"
-      #             }
-      #           }
-      #         ]
-      #       }
-
-  cleanup_release_branch:
-    runs-on: ubuntu-18.04
-    if: ${{ !contains(github.event.issue.labels.*.name, 'QA Approved') }}
-    needs: [env]
-    steps:
-      - name: Delete branch
-        uses: actions/github-script@v5
-        env:
-          BRANCH: ${{needs.env.outputs.branch}}
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            await github.rest.git.deleteRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `heads/${process.env.BRANCH}`
-            })
-      # - name: Post to a Slack channel
-      #   id: slack
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      #   uses: slackapi/slack-github-action@v1.16.0
-      #   with:
-      #     payload: |
-      #       {
-      #         "blocks": [
-      #           {
-      #             "type": "header",
-      #             "text": {
-      #               "type": "plain_text",
-      #               "text": "[${{needs.env.outputs.tag}}] ❌ Release cancelled 😢"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "The release candidate is cancelled."
-      #             }
-      #           }
-      #         ]
-      #       }
+          workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
+          slack-webhook-url: 'test'
