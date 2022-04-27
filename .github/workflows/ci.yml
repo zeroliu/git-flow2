@@ -88,15 +88,7 @@ jobs:
       ref: ${{ needs.env.outputs.ref }}
       environment: ${{ needs.env.outputs.environment }}
       release_version: ${{  needs.env.outputs.release_version }}
-  notify-zeffo-deploy-error:
-    needs: [env, zeffo-deploy, zeffo-test]
-    if: ${{ always() && needs.env.outputs.environment != 'develop' && ! success() }}
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Notify on failure
-        if: ${{ ! success() }}
-        run: |
-          echo "run failure notification"
+
   embed-build:
     needs: [env]
     if: ${{ needs.env.outputs.environment != 'develop' }}
@@ -120,6 +112,14 @@ jobs:
     steps:
       - run: |
           echo ${{ needs.embed-test.result }}
+  notify-on-error:
+    needs: [env, zeffo-deploy, embed-deploy]
+    if: ${{ always() && needs.env.outputs.environment != 'develop' && ! success() }}
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Notify on failure
+        run: |
+          echo "run failure notification"
   # notify:
   #   needs: [env, zeffo-deploy, embed-deploy]
   #   if: ${{ needs.env.outputs.environment == 'production' }}
