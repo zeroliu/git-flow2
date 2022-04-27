@@ -30,3 +30,4 @@ jobs:
       - run: |
           echo ${{ inputs.ref }}
           echo ${{ inputs.environment }}
+          exit 1

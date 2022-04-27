@@ -29,3 +29,7 @@ jobs:
           name: built-artifact
       - run: |
           cat output.txt
+      - name: Notify on failure
+        if: ${{ ! success() }}
+        run: |
+          echo "run"
