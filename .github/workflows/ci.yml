@@ -120,7 +120,10 @@ jobs:
       - name: Notify on failure
         run: |
           echo "run failure notification"
-          echo ${{ github.run_id }}
+          echo run_id: ${{ github.run_id }}
+          echo run_number: ${{ github.run_number }}
+          echo server_url: ${{ github.server_url }}
+          echo job: ${{ github.job }}
   # notify:
   #   needs: [env, zeffo-deploy, embed-deploy]
   #   if: ${{ needs.env.outputs.environment == 'production' }}
