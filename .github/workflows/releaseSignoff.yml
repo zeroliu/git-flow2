@@ -14,4 +14,3 @@ jobs:
         uses: loopsocial/sign-off-action@v1.0.11
         with:
           workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
-          slack-webhook-url: ${{ secrets.ZEFFO_SLACK_NOTIFIER_WEBHOOK }}
