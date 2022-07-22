@@ -37,10 +37,11 @@ jobs:
       - name: Set variables
         id: vars
         run: |
-          echo ${{ github.event.action }}
-          echo ${{ github.event.inputs.tag }}
+          echo Event action: ${{ github.event.action }}
+          echo Inputs tag: ${{ github.event.inputs.tag }}
           REF=${{ github.ref }}
           TAG=${{ github.event.release.tag_name || github.event.inputs.tag }}
+          echo custom tag: ${{ github.event.release.tag_name || github.event.inputs.tag || github.ref }}
           if test $TAG; then REF="refs/tags/$TAG"; fi
           ENVIRONMENT="develop"
           [[ $REF == refs/heads/release/* ]] && ENVIRONMENT="staging"
