@@ -1,5 +1,9 @@
 name: ▶️ CI
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -33,6 +37,7 @@ jobs:
       - name: Set variables
         id: vars
         run: |
+          echo ${{ github.event.action }}
           echo ${{ github.event.inputs.tag }}
           REF=${{ github.ref }}
           TAG=${{ github.event.release.tag_name || github.event.inputs.tag }}
